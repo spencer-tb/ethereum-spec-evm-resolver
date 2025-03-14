@@ -64,6 +64,15 @@ class _EvmToolHandler(BaseHTTPRequestHandler):
         }
         self.wfile.write(json.dumps(response_json).encode("utf-8"))
 
+    def do_GET(self) -> None:
+        if self.path.startswith("/heartbeat/"):
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
+            self.wfile.write(b'{"status":"ok"}')
+        else:
+            self.send_error(501, "Unsupported method")
+
 
 class _UnixSocketHttpServer(socketserver.UnixStreamServer):
     last_response: Optional[float] = None
@@ -177,6 +186,9 @@ class Daemon:
 
             try:
                 server.serve_forever()
+            # TODO: optionally log the exception in future, this silences it 
+            # except Exception:
+                # pass
             finally:
                 server.kill_subprocesses()
 
