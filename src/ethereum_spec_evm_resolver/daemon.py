@@ -187,8 +187,8 @@ class Daemon:
             try:
                 server.serve_forever()
             # TODO: optionally log the exception in future, this silences it 
-            # except Exception:
-                # pass
+            except Exception:
+                pass
             finally:
                 server.kill_subprocesses()
 
