@@ -32,6 +32,13 @@ class _EvmToolHandler(BaseHTTPRequestHandler):
         """Don't log requests"""
         pass
 
+    def finish(self) -> None:
+        try:
+            super().finish()
+        except ValueError:
+            # Ignore the "I/O operation on closed file" error
+            pass
+
     def do_POST(self) -> None:
         content_length = int(self.headers["Content-Length"])
         content_bytes = self.rfile.read(content_length)
